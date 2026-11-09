@@ -1,0 +1,69 @@
+:root {
+  --bg: #ffffff; --surface: #f5f6fa; --border: #e2e4ec; --text: #171a26; --muted: #646b80;
+  --accent: #4f46e5; --accent-ink: #ffffff; --danger: #c62828; --ok: #2e7d32; --warn: #b26a00;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14161f; --surface: #1d2030; --border: #2c3046; --text: #eceef6; --muted: #9aa0b8;
+    --accent: #818cf8; --accent-ink: #0d0f18; --danger: #ef6b6b; --ok: #6cc570; --warn: #e3a64a;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text); }
+body { width: 380px; min-height: 480px; font: 14px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; }
+body.tab { width: auto; max-width: 520px; margin: 40px auto; }
+main { padding: 14px; }
+h1 { font-size: 18px; margin: 0 0 4px; }
+h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 14px 0 6px; }
+p { margin: 0 0 10px; }
+.muted { color: var(--muted); font-size: 12px; }
+.row { display: flex; gap: 8px; align-items: center; }
+.grow { flex: 1; min-width: 0; }
+.stack > * + * { margin-top: 10px; }
+.brand { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.brand img { width: 28px; height: 28px; }
+label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+input, textarea, select {
+  width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--surface); color: var(--text); font: inherit;
+}
+input:focus, textarea:focus, select:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+textarea { min-height: 70px; resize: vertical; }
+input[type="checkbox"], input[type="range"] { width: auto; }
+button {
+  font: inherit; border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  border-radius: 8px; padding: 7px 10px; cursor: pointer; white-space: nowrap;
+}
+button:hover { border-color: var(--accent); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+button.danger { color: var(--danger); }
+button.icon { padding: 6px 8px; }
+button.block { width: 100%; }
+.toolbar { display: flex; gap: 6px; margin-bottom: 10px; }
+.list { list-style: none; margin: 0; padding: 0; }
+.item {
+  display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 10px; cursor: pointer;
+}
+.item:hover, .item:focus-visible { background: var(--surface); outline: none; }
+.avatar {
+  width: 32px; height: 32px; border-radius: 8px; flex: none; display: grid; place-items: center;
+  background: var(--accent); color: var(--accent-ink); font-weight: 700; text-transform: uppercase;
+}
+.title { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sub { color: var(--muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.field { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; }
+.field .value { font-family: ui-monospace, Menlo, Consolas, monospace; word-break: break-all; }
+.totp { font-size: 22px; letter-spacing: .15em; }
+.meter { height: 4px; border-radius: 2px; background: var(--border); overflow: hidden; margin-top: 4px; }
+.meter > div { height: 100%; }
+.lvl1 { background: var(--danger); } .lvl2 { background: var(--warn); } .lvl3, .lvl4 { background: var(--ok); }
+.error { color: var(--danger); font-size: 13px; }
+.empty { text-align: center; color: var(--muted); padding: 30px 10px; }
+.gen-out { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 16px; word-break: break-all; }
+#toast {
+  position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); background: var(--text); color: var(--bg);
+  padding: 8px 14px; border-radius: 999px; font-size: 13px; box-shadow: 0 4px 14px rgba(0,0,0,.25);
+}
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

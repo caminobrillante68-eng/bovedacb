@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Bóveda CB",
+  "short_name": "Bóveda",
+  "version": "0.1.0",
+  "description": "Gestor de contraseñas local y cifrado (no oficial). Tus datos nunca salen de este navegador.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Bóveda CB",
+    "default_icon": { "16": "icons/16.png", "32": "icons/32.png", "48": "icons/48.png", "128": "icons/128.png" }
+  },
+  "icons": { "16": "icons/16.png", "32": "icons/32.png", "48": "icons/48.png", "128": "icons/128.png" },
+  "background": { "service_worker": "background.js", "type": "module" },
+  "permissions": ["storage", "activeTab", "scripting", "alarms", "idle", "clipboardWrite"],
+  "commands": {
+    "_execute_action": { "suggested_key": { "default": "Ctrl+Shift+L", "mac": "Command+Shift+L" } }
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
+  }
+}
