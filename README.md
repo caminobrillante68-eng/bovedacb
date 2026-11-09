@@ -1,36 +1,50 @@
-# Bóveda CB — gestor de contraseñas (extensión de Chrome, no oficial)
+# Bóveda CB — contraseñas compartidas del equipo (extensión de Chrome, no oficial)
 
-Bóveda local y cifrada, estilo gestor de contraseñas. **Independiente del dashboard**: no usa
-Supabase ni ningún servidor; los datos nunca salen del navegador.
+Todo el equipo ve y usa las mismas contraseñas. Se cifran **en el navegador** con la clave del
+equipo antes de subirse a Supabase: el servidor solo guarda texto cifrado y nunca ve la clave.
 
-## Instalar (sin publicar en la Chrome Web Store)
-1. Abre `chrome://extensions` y activa **Modo de desarrollador** (arriba a la derecha).
-2. **Cargar descomprimida** → elige la carpeta `vault-extension/`.
-3. Fija el ícono en la barra. Atajo: `Ctrl+Shift+L` (`⌘+Shift+L` en Mac).
+## Dos contraseñas distintas
+| | Para qué | Quién la tiene |
+|---|---|---|
+| **Contraseña de tu cuenta** | Entrar (email + contraseña). Sin cuenta del equipo no se descarga nada. | Cada persona la suya |
+| **Clave del equipo** | Desbloquear y descifrar la bóveda. | La misma para todos; la da el admin en privado |
+
+## Primera vez (admin)
+1. En Supabase → proyecto **bovedacb** → *Authentication → Users → Add user → Create new user*:
+   tu email (el que ya está invitado como admin), una contraseña, y marca **Auto Confirm User**.
+2. Recomendado: *Authentication → Sign In / Providers* → desactiva **Allow new users to sign up**
+   (las cuentas las creas tú; así nadie de fuera puede registrarse).
+3. Instala la extensión (abajo), entra con tu cuenta y crea la **clave del equipo**.
+
+## Agregar a alguien
+1. En la extensión → 👥 Equipo → **Invitar** con su email (Miembro o Admin).
+2. En Supabase → *Authentication → Users → Add user*: mismo email, una contraseña inicial,
+   **Auto Confirm User** marcado. Al crearse, entra solo al equipo.
+3. Pásale en privado su contraseña de cuenta y la clave del equipo, y el ZIP de la extensión.
+
+## Sacar a alguien
+👥 Equipo → **Quitar**. Deja de poder descargar la bóveda al instante y su extensión borra la copia
+local. Como conocía la clave del equipo, después ve a ⚙ Ajustes → **Cambiar clave del equipo**
+(re-cifra todo) y cambia las contraseñas más importantes.
+
+## Instalar en cada computadora
+1. Descarga el repo (GitHub → *Code → Download ZIP*) y descomprímelo; o comparte ese ZIP con el equipo.
+2. `chrome://extensions` → activa **Modo de desarrollador** → **Cargar descomprimida** → elige la carpeta.
+3. Fija el ícono. Atajo: `Ctrl+Shift+L` (`⌘+Shift+L` en Mac).
 
 ## Qué hace
-- Contraseña maestra → crea / desbloquea la bóveda.
-- Elementos con título, sitio, usuario, contraseña, código 2FA (TOTP) y notas.
-- **Rellenar**: sobre la página de login, abre la extensión y pulsa «Rellenar» en el elemento
-  del sitio (se muestra arriba, en «En <sitio>»). Solo rellena si el dominio coincide.
-- Generador de contraseñas, medidor de fuerza, búsqueda y copiar al portapapeles
-  (se borra a los 30 s si el popup sigue abierto).
+- Elementos con título, sitio, usuario, contraseña, código 2FA (TOTP) y notas; quién y cuándo lo cambió.
+- **Rellenar** en la página de login (solo si el dominio coincide), generador, búsqueda, copiar.
+- Si dos personas editan lo mismo a la vez, la segunda recibe un aviso en vez de pisar el cambio.
+- Sin internet: muestra la última copia (cifrada) en solo lectura.
 - Bloqueo automático (1 min – 4 h, o al cerrar el navegador) y al bloquear la computadora.
-- Respaldo cifrado (exportar / restaurar) y cambio de contraseña maestra en ⚙ Ajustes.
+- Respaldo cifrado (exportar) e importación a la bóveda del equipo (también desde la bóveda personal de la v0.1).
 
 ## Seguridad
-- Clave: PBKDF2-SHA256 con 600 000 iteraciones y sal aleatoria → AES-256-GCM (Web Crypto nativo,
-  sin dependencias). En `chrome.storage.local` solo se guarda el sobre cifrado.
-- La clave desbloqueada vive en `chrome.storage.session` (en memoria, no accesible a páginas web,
-  se borra al cerrar el navegador o al vencer el bloqueo automático).
-- Permisos mínimos: sin acceso permanente a los sitios. Solo inyecta el relleno en la pestaña
-  activa cuando tú lo pides (`activeTab`), y vuelve a comprobar el dominio dentro de la página
-  (protección contra phishing). Avisa si la página no usa HTTPS.
-- Sin `innerHTML` con datos del usuario y CSP estricta en las páginas de la extensión.
-- **Si olvidas la contraseña maestra, no hay recuperación.** Exporta un respaldo de vez en cuando:
-  la bóveda vive en el perfil de Chrome y se pierde si desinstalas la extensión.
-
-## Límites (v0.1)
-- Sin sincronización entre dispositivos (usa Exportar/Restaurar para moverla).
-- No detecta ni ofrece guardar logins nuevos automáticamente (requeriría permiso sobre todos los sitios).
-- El relleno funciona en el marco principal de la página, no dentro de iframes.
+- Clave del equipo → PBKDF2-SHA256 (600 000 iteraciones) → AES-256-GCM, IV nuevo por elemento y guardado.
+- Supabase: RLS en todas las tablas; solo miembros leen; `anon` no tiene permisos. Las escrituras con
+  una clave vieja se rechazan en la base. Esquema en `supabase/migrations/`.
+- La extensión solo se conecta a `ohubfaeiokgcdomncwym.supabase.co` (CSP) y solo toca la pestaña activa
+  cuando pulsas «Rellenar».
+- **Si se pierde la clave del equipo, no hay recuperación.** Guárdala en un lugar seguro.
+- Proyecto gratuito de Supabase: se pausa tras ~1 semana sin uso; se reactiva desde el panel.
